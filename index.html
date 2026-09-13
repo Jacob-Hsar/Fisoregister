@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>House Of J&S — FISO National Round 2026</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+:root{
+  --gold:#C9A227; --gold-2:#D4AF37; --gold-3:#E3C55A;
+  --gold-light:#FBF3D5; --gold-dark:#8C6D1F; --gold-deep:#B8860B;
+  --ink:#3B2F0B; --line:#F0E2B0;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  font-family:"Padauk","Noto Sans Myanmar","Myanmar Text",Pyidaungsu,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  background:linear-gradient(160deg,#FFFDF6 0%,#FFF9E8 35%,#FDF2CE 100%);
+  background-attachment:fixed;min-height:100vh;color:var(--ink);
+  -webkit-font-smoothing:antialiased;
+}
+.topbar{
+  background:linear-gradient(120deg,#B8860B 0%,#D4AF37 40%,#F1DA8A 68%,#C9A227 100%);
+  color:#fff;padding:16px 28px;display:flex;align-items:center;gap:18px;
+  box-shadow:0 8px 28px rgba(184,134,11,.35);border-bottom:3px solid #fff;
+  position:sticky;top:0;z-index:50;
+}
+.topbar .logo{
+  width:66px;height:66px;object-fit:contain;background:#fff;border-radius:16px;padding:7px;
+  box-shadow:0 5px 16px rgba(0,0,0,.18);flex:0 0 auto;
+}
+.brand h1{font-size:23px;font-weight:800;letter-spacing:.5px;text-shadow:0 2px 6px rgba(0,0,0,.22);line-height:1.15;}
+.brand p{font-size:13px;opacity:.95;letter-spacing:1.6px;text-transform:uppercase;font-weight:600;margin-top:2px;}
+.topbar .spacer{flex:1;}
+.top-badge{
+  background:rgba(255,255,255,.95);color:var(--gold-dark);
+  padding:9px 18px;border-radius:30px;font-weight:800;font-size:13px;
+  box-shadow:0 4px 14px rgba(0,0,0,.15);white-space:nowrap;
+}
+.fb-badge{
+  display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,.22);
+  color:#fff;padding:7px 14px;border-radius:30px;font-weight:800;font-size:12px;
+  letter-spacing:.3px;border:1.5px solid rgba(255,255,255,.5);white-space:nowrap;
+}
+.fb-badge .dot{
+  width:9px;height:9px;border-radius:50%;background:#FFD84D;
+  box-shadow:0 0 0 3px rgba(255,216,77,.3);animation:pulse 1.4s infinite;
+}
+.fb-badge.ok .dot{background:#4ADE80;box-shadow:0 0 0 3px rgba(74,222,128,.3);animation:none;}
+.fb-badge.err .dot{background:#F87171;box-shadow:0 0 0 3px rgba(248,113,113,.3);animation:none;}
+.fb-badge.seed .dot{background:#60A5FA;box-shadow:0 0 0 3px rgba(96,165,250,.3);}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.wrap{max-width:1680px;margin:0 auto;padding:24px 22px 60px;}
+.toolbar{
+  background:#fff;border:2px solid var(--gold-3);border-radius:18px;
+  padding:16px 18px;display:flex;flex-wrap:wrap;gap:12px;align-items:center;
+  box-shadow:0 8px 26px rgba(201,162,39,.14);margin-bottom:18px;
+}
+.search-box{position:relative;flex:1 1 260px;min-width:200px;}
+.search-box input{
+  width:100%;padding:11px 14px 11px 40px;border:2px solid var(--line);border-radius:12px;
+  font-size:14px;font-family:inherit;color:var(--ink);background:#FFFDF5;outline:none;transition:.2s;
+}
+.search-box input:focus{border-color:var(--gold-2);background:#fff;box-shadow:0 0 0 4px rgba(212,175,55,.15);}
+.search-box::before{content:"🔍";position:absolute;left:13px;top:50%;transform:translateY(-50%);font-size:14px;opacity:.65;}
+select.filter{
+  padding:11px 14px;border:2px solid var(--line);border-radius:12px;
+  font-size:14px;font-family:inherit;color:var(--ink);background:#FFFDF5;outline:none;cursor:pointer;transition:.2s;
+}
+select.filter:focus{border-color:var(--gold-2);box-shadow:0 0 0 4px rgba(212,175,55,.15);}
+.btn{
+  border:none;cursor:pointer;font-family:inherit;padding:11px 20px;border-radius:12px;
+  font-size:14px;font-weight:700;display:inline-flex;align-items:center;gap:7px;
+  transition:transform .12s, box-shadow .2s, filter .2s;white-space:nowrap;
+}
+.btn:active{transform:translateY(1px) scale(.99);}
+.btn-gold{background:linear-gradient(135deg,#D4AF37,#B8860B);color:#fff;box-shadow:0 5px 16px rgba(184,134,11,.35);}
+.btn-gold:hover{filter:brightness(1.08);box-shadow:0 8px 22px rgba(184,134,11,.45);}
+.btn-outline{background:#fff;color:var(--gold-dark);border:2px solid var(--gold-3);}
+.btn-outline:hover{background:var(--gold-light);}
+.btn-green{background:linear-gradient(135deg,#1FA971,#0E7A50);color:#fff;box-shadow:0 5px 16px rgba(14,122,80,.3);}
+.btn-green:hover{filter:brightness(1.08);}
+.btn-red{background:linear-gradient(135deg,#E74C3C,#C0392B);color:#fff;box-shadow:0 5px 16px rgba(192,57,43,.3);}
+.btn-red:hover{filter:brightness(1.08);}
+.btn:disabled{opacity:.55;cursor:not-allowed;filter:none;}
+.switch{display:inline-flex;align-items:center;gap:9px;cursor:pointer;user-select:none;
+  background:#FFFDF5;border:2px solid var(--line);border-radius:12px;padding:8px 14px;}
+.switch input{display:none;}
+.slider{width:44px;height:24px;background:#E4D9AE;border-radius:20px;position:relative;transition:.25s;flex:0 0 auto;}
+.slider::after{
+  content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;background:#fff;
+  border-radius:50%;transition:.25s;box-shadow:0 2px 5px rgba(0,0,0,.25);
+}
+.switch input:checked + .slider{background:linear-gradient(135deg,#D4AF37,#B8860B);}
+.switch input:checked + .slider::after{left:23px;}
+.switch .lbl{font-size:13px;font-weight:700;color:var(--gold-dark);white-space:nowrap;}
+.stats{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:18px;}
+.stat{
+  background:#fff;border:2px solid var(--gold-3);border-radius:14px;
+  padding:12px 22px;box-shadow:0 5px 18px rgba(201,162,39,.12);
+  display:flex;flex-direction:column;gap:2px;min-width:130px;
+}
+.stat b{font-size:22px;color:var(--gold-deep);}
+.stat span{font-size:12px;color:#9a8a5a;font-weight:700;letter-spacing:.6px;text-transform:uppercase;}
+.table-card{background:#fff;border:2px solid var(--gold-3);border-radius:18px;overflow:hidden;box-shadow:0 12px 36px rgba(201,162,39,.16);}
+.table-scroll{overflow-x:auto;}
+table{width:100%;border-collapse:separate;border-spacing:0;min-width:1580px;}
+thead th{
+  background:linear-gradient(180deg,#D4AF37,#B8860B);color:#fff;font-weight:800;font-size:12.5px;
+  padding:14px 12px;text-align:left;white-space:nowrap;letter-spacing:.4px;
+  position:sticky;top:0;z-index:5;border-right:1px solid rgba(255,255,255,.25);transition:background .18s;
+}
+thead th:last-child{border-right:none;}
+thead th.sortable{cursor:pointer;user-select:none;}
+thead th.sortable:hover{background:linear-gradient(180deg,#E3C55A,#C9A227);}
+thead th .arrow{display:inline-block;margin-left:6px;font-size:10px;opacity:.45;transition:opacity .18s, transform .18s;}
+thead th.active .arrow{opacity:1;}
+thead th.active{background:linear-gradient(180deg,#8C6D1F,#6B5417);}
+tbody td{padding:11px 12px;font-size:13.5px;vertical-align:top;border-bottom:1px solid var(--line);line-height:1.5;}
+tbody tr:nth-child(even){background:#FFFDF3;}
+tbody tr:hover{background:#FFF6D6;}
+tbody tr:last-child td{border-bottom:none;}
+td.no-cell{font-weight:800;color:var(--gold-deep);text-align:center;width:52px;}
+td.name-cell{font-weight:700;color:#4A3A08;width:200px;}
+td.phone-cell{font-weight:700;color:#0E7A50;white-space:nowrap;font-variant-numeric:tabular-nums;}
+td.email-cell{color:#6b5a20;font-size:12.5px;word-break:break-all;max-width:220px;}
+.grade-pill{
+  display:inline-block;background:var(--gold-light);color:var(--gold-dark);
+  border:1.5px solid var(--gold-3);border-radius:20px;padding:2px 12px;font-weight:800;font-size:12px;
+}
+.place-pill{display:inline-block;border-radius:20px;padding:2px 12px;font-weight:800;font-size:11.5px;white-space:nowrap;}
+.place-online{background:#E7F7EF;color:#0E7A50;border:1.5px solid #A8E3C6;}
+.place-offline{background:#FDEDE7;color:#C0491F;border:1.5px solid #F5BFA9;}
+td.actions{white-space:nowrap;text-align:center;width:140px;}
+.act{
+  border:none;cursor:pointer;width:34px;height:34px;border-radius:10px;
+  font-size:15px;margin:0 3px;transition:.18s;display:inline-flex;align-items:center;justify-content:center;
+}
+.act.img{background:#FFF6D6;color:#B8860B;border:1.5px solid var(--gold-3);}
+.act.img:hover{background:var(--gold-2);color:#fff;}
+.act.edit{background:#EAF4FF;color:#1667B8;border:1.5px solid #B6D8F7;}
+.act.edit:hover{background:#1667B8;color:#fff;}
+.act.del{background:#FFEDED;color:#C0392B;border:1.5px solid #F5B7B1;}
+.act.del:hover{background:#C0392B;color:#fff;}
+.empty{padding:60px 20px;text-align:center;color:#9a8a5a;font-size:15px;font-weight:600;}
+.loading{padding:60px 20px;text-align:center;color:var(--gold-deep);font-size:15px;font-weight:700;}
+.loading .spinner{
+  display:inline-block;width:26px;height:26px;border:3px solid var(--gold-light);
+  border-top-color:var(--gold-2);border-radius:50%;animation:spin .8s linear infinite;
+  margin-right:10px;vertical-align:middle;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.foot{text-align:center;margin-top:34px;color:#a8955c;font-size:12.5px;line-height:1.9;font-weight:600;}
+.foot b{color:var(--gold-deep);}
+.overlay{
+  position:fixed;inset:0;background:rgba(59,47,11,.55);backdrop-filter:blur(3px);
+  display:none;align-items:center;justify-content:center;z-index:200;padding:20px;
+}
+.overlay.show{display:flex;}
+.modal{
+  background:#fff;border:2px solid var(--gold-3);border-radius:20px;
+  width:100%;max-width:880px;max-height:92vh;overflow:auto;
+  box-shadow:0 26px 70px rgba(0,0,0,.35);animation:pop .22s ease;
+}
+@keyframes pop{from{transform:scale(.95);opacity:0}to{transform:scale(1);opacity:1}}
+.modal-head{
+  background:linear-gradient(120deg,#D4AF37,#B8860B);color:#fff;padding:16px 22px;
+  display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10;
+}
+.modal-head h2{font-size:17px;font-weight:800;letter-spacing:.4px;}
+.modal-head .close{
+  background:rgba(255,255,255,.22);border:none;color:#fff;width:34px;height:34px;
+  border-radius:10px;cursor:pointer;font-size:17px;display:flex;align-items:center;justify-content:center;transition:.2s;
+}
+.modal-head .close:hover{background:rgba(255,255,255,.4);}
+.modal-body{padding:22px;}
+.form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;}
+.field label{display:block;font-size:12.5px;font-weight:800;color:var(--gold-dark);margin-bottom:6px;letter-spacing:.3px;}
+.field input,.field select{
+  width:100%;padding:10px 13px;border:2px solid var(--line);border-radius:11px;
+  font-size:14px;font-family:inherit;color:var(--ink);background:#FFFDF5;outline:none;transition:.2s;
+}
+.field input:focus,.field select:focus{border-color:var(--gold-2);background:#fff;box-shadow:0 0 0 4px rgba(212,175,55,.15);}
+.modal-foot{
+  padding:16px 22px;display:flex;justify-content:flex-end;gap:10px;
+  border-top:2px dashed var(--line);position:sticky;bottom:0;background:#fff;
+}
+.preview-img{width:100%;border-radius:14px;border:2px solid var(--gold-3);box-shadow:0 10px 30px rgba(0,0,0,.15);display:block;}
+.export-card{
+  position:fixed;left:-20000px;top:0;width:760px;background:#fff;
+  font-family:"Padauk","Noto Sans Myanmar",Pyidaungsu,system-ui,"Segoe UI",sans-serif;
+  border:8px solid #D4AF37;box-sizing:border-box;
+}
+.ec-top{background:linear-gradient(120deg,#B8860B,#D4AF37 45%,#F1DA8A 75%,#C9A227);padding:22px 30px;display:flex;align-items:center;gap:18px;}
+.ec-top img{width:78px;height:78px;object-fit:contain;background:#fff;border-radius:16px;padding:8px;box-shadow:0 4px 14px rgba(0,0,0,.2);}
+.ec-brand h1{font-size:27px;font-weight:800;color:#fff;letter-spacing:.6px;text-shadow:0 2px 6px rgba(0,0,0,.25);line-height:1.15;}
+.ec-brand p{font-size:13px;color:#fff;opacity:.95;letter-spacing:3px;font-weight:700;text-transform:uppercase;margin-top:3px;}
+.ec-body{padding:22px 30px 8px;}
+.ec-row{display:flex;border-bottom:1px dashed #EFE2B4;padding:9px 0;align-items:flex-start;}
+.ec-row:last-child{border-bottom:none;}
+.ec-label{width:200px;flex:0 0 200px;font-size:13px;font-weight:800;color:#B8860B;letter-spacing:.4px;text-transform:uppercase;}
+.ec-value{flex:1;font-size:15.5px;font-weight:700;color:#3B2F0B;word-break:break-word;}
+.ec-foot{
+  background:#FBF3D5;border-top:3px solid #D4AF37;padding:12px 30px;
+  font-size:12.5px;color:#8C6D1F;font-weight:800;letter-spacing:.6px;display:flex;justify-content:space-between;
+}
+
+/* ============================================
+   FREEZE — No + Full Name Columns (Sticky)
+   ============================================ */
+thead th:nth-child(1),
+thead th:nth-child(2){
+  z-index: 8;
+  position: sticky;
+  top: 0;
+}
+thead th:nth-child(1){ left: 0; }
+thead th:nth-child(2){ left: 52px; }
+
+tbody td.no-cell{
+  position: sticky;
+  left: 0;
+  z-index: 4;
+  width: 52px;
+  background: inherit;
+}
+tbody td.name-cell{
+  position: sticky;
+  left: 52px;
+  z-index: 4;
+  width: 200px;
+  background: inherit;
+  box-shadow: 4px 0 8px -4px rgba(140,109,31,.30);
+}
+
+/* Sticky cells တွေမှာ row background ပြတ်မနေစေရန် — opaque BG ပြန်ထည့် */
+tbody tr:nth-child(even) td.no-cell,
+tbody tr:nth-child(even) td.name-cell{ background: #FFFDF3; }
+
+tbody tr:nth-child(odd) td.no-cell,
+tbody tr:nth-child(odd) td.name-cell{ background: #ffffff; }
+
+tbody tr:hover td.no-cell,
+tbody tr:hover td.name-cell{ background: #FFF6D6; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <img src="logo1.png" alt="House Of J&S Logo" class="logo" onerror="this.style.display='none'">
+  <div class="brand">
+    <h1>House Of J&amp;S</h1>
+    <p>Computer Training Center</p>
+  </div>
+  <div class="spacer"></div>
+  <div class="fb-badge" id="fbBadge"><span class="dot"></span><span id="fbText">Connecting…</span></div>
+  <div class="top-badge">🏆 FISO National Round 2026</div>
+</div>
+
+<div class="wrap">
+
+  <div class="stats">
+    <div class="stat"><b id="statTotal">0</b><span>Total Students</span></div>
+    <div class="stat"><b id="statShown">0</b><span>Showing</span></div>
+    <div class="stat"><b id="statOnline">0</b><span>Online</span></div>
+    <div class="stat"><b id="statOffline">0</b><span>Offline</span></div>
+  </div>
+
+  <div class="toolbar">
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="Search name / email / phone / father…">
+    </div>
+    <select class="filter" id="gradeFilter"><option value="">All Grades</option></select>
+    <select class="filter" id="placeFilter">
+      <option value="">All Exam Places</option>
+      <option value="Online">Online</option>
+      <option value="Offline">Offline</option>
+    </select>
+    <label class="switch">
+      <input type="checkbox" id="autoDownload" checked>
+      <span class="slider"></span>
+      <span class="lbl">Auto Download</span>
+    </label>
+    <button class="btn btn-red" id="btnSeed">🌱 Seed 36 Students</button>
+    <button class="btn btn-green" id="btnExportCSV">📥 Export CSV</button>
+    <button class="btn btn-gold" id="btnAdd">➕ Add Student</button>
+  </div>
+
+  <div class="table-card">
+    <div class="table-scroll">
+      <table id="studentTable">
+        <thead>
+          <tr id="theadRow">
+            <th class="sortable" data-sort="id" style="width:52px;text-align:center;">No <span class="arrow">▲▼</span></th>
+            <th class="sortable" data-sort="name">Full Name <span class="arrow">▲▼</span></th>
+            <th class="sortable" data-sort="grade">Grade <span class="arrow">▲▼</span></th>
+            <th class="sortable" data-sort="subject">Subjects <span class="arrow">▲▼</span></th>
+            <th class="sortable" data-sort="email">Email Address <span class="arrow">▲▼</span></th>
+            <th class="sortable" data-sort="address">Address <span class="arrow">▲▼</span></th>
+            <th class="sortable" data-sort="phone">Contact Number <span class="arrow">▲▼</span></th>
+            <th class="sortable" data-sort="centre">Exam Centre <span class="arrow">▲▼</span></th>
+            <th class="sortable" data-sort="school">School Name <span class="arrow">▲▼</span></th>
+            <th class="sortable" data-sort="dob">Date of Birthday <span class="arrow">▲▼</span></th>
+            <th class="sortable" data-sort="father">Father's Name <span class="arrow">▲▼</span></th>
+            <th class="sortable" data-sort="place">Exam Place <span class="arrow">▲▼</span></th>
+            <th style="text-align:center;">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody">
+          <tr><td colspan="13" class="loading"><span class="spinner"></span>Firebase မှ ဒေတာများ ရယူနေသည်…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="foot">
+    <b>House Of J&amp;S Computer Training Center</b> &nbsp;•&nbsp; FISO National Round 2026<br>
+    Student Registration Management System &nbsp;•&nbsp; Powered by Firebase Firestore
+  </div>
+</div>
+
+<div class="overlay" id="editOverlay">
+  <div class="modal">
+    <div class="modal-head">
+      <h2 id="editTitle">✏️ Edit Student</h2>
+      <button class="close" data-close="editOverlay">✕</button>
+    </div>
+    <div class="modal-body"><div class="form-grid" id="formGrid"></div></div>
+    <div class="modal-foot">
+      <button class="btn btn-outline" data-close="editOverlay">Cancel</button>
+      <button class="btn btn-gold" id="btnSave">💾 Save</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="imgOverlay">
+  <div class="modal" style="max-width:820px;">
+    <div class="modal-head">
+      <h2 id="imgTitle">🖼️ Student Card</h2>
+      <button class="close" data-close="imgOverlay">✕</button>
+    </div>
+    <div class="modal-body"><img id="previewImg" class="preview-img" alt="Student Card"></div>
+    <div class="modal-foot">
+      <button class="btn btn-outline" data-close="imgOverlay">Close</button>
+      <button class="btn btn-green" id="btnDownloadImg">⬇️ Download Image</button>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+/* ==========================================================
+   FIREBASE
+   ========================================================== */
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {
+  getFirestore, collection, onSnapshot, addDoc, updateDoc,
+  deleteDoc, doc, writeBatch, getDocs
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBRuyXfROpjZVmIXLjhG5_zi66qIUUHAc8",
+  authDomain: "fiso-32faa.firebaseapp.com",
+  projectId: "fiso-32faa",
+  storageBucket: "fiso-32faa.firebasestorage.app",
+  messagingSenderId: "491784265612",
+  appId: "1:491784265612:web:a8c63ee9e3a4c689b1c0a9"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const STUDENTS_COL = collection(db, 'students');
+console.log('[FISO] Firebase ready');
+
+/* ==========================================================
+   STATUS BADGE
+   ========================================================== */
+const fbBadge = document.getElementById('fbBadge');
+const fbText  = document.getElementById('fbText');
+function setFbStatus(state, msg){
+  fbBadge.classList.remove('ok','err','seed');
+  if(state === 'ok')   fbBadge.classList.add('ok');
+  if(state === 'err')  fbBadge.classList.add('err');
+  if(state === 'seed') fbBadge.classList.add('seed');
+  fbText.textContent = msg;
+}
+
+/* ==========================================================
+   RAW DATA
+   ========================================================== */
+const RAW = [
+[1,"Min Hein Yatu","2","Digital Technology","sweetysmiledardar@gmail.com","Bago","95380288","House Of J&S Computer Training Center","House Of J&S Computer Training Center","1.2.2019","U Zin Min Kyaw","Online"],
+[2,"Yadanar","3","Digital Technology","yadanarhtn26@gmail.com","Bago","9768112494","House Of J&S Computer Training Center","House Of J&S Computer Training Center","29.11.2017","U Kyaw Thiha","Online"],
+[3,"Linn Myat Bhone Maung","3","Digital Technology","linnmyatbhonemaung4555@gmail.com","Bago","97815569","House Of J&S Computer Training Center","House Of J&S Computer Training Center","31.1.2018","U Zaw Linn Htoon","Online"],
+[4,"Myint Myat Paing","3","Digital Technology","myintmyatpaing.mmp@gmail.com","Bago","","House Of J&S Computer Training Center","House Of J&S Computer Training Center","","","Online"],
+[5,"Khin Win War","4","Digital Technology","","Bago","","House Of J&S Computer Training Center","House Of J&S Computer Training Center","","","Online"],
+[6,"Hsu Yadanar Htet","4","Digital Technology","hsuyadanarhtet23@gmail.com","Bago","9897622511","House Of J&S Computer Training Center","House Of J&S Computer Training Center","12.5.2016","U Win Zaw","Online"],
+[7,"Nyan Lynn Phyo","4","Digital Technology","nyanlynnphyo14@gmail.com","Bago","9750351352","House Of J&S Computer Training Center","House Of J&S Computer Training Center","15.9.2015","U Tint Lwin Oo","Online"],
+[8,"Bhone Wai Hlyan","4","Digital Technology","williamdv26@gmail.com","Bago","943010209","House Of J&S Computer Training Center","House Of J&S Computer Training Center","","","Online"],
+[9,"May Phoo Thit","4","Digital Technology","mayphoothit66@gmail.com","Bago","9422903020","House Of J&S Computer Training Center","House Of J&S Computer Training Center","31.5.2017","U Myo Thiha","Online"],
+[10,"Khit Kyi Nue Zaw","4","Digital Technology","erristo@gmail.com","Bago","9254021602","House Of J&S Computer Training Center","House Of J&S Computer Training Center","1.1.2018","U Nyi Nyi Zaw","Online"],
+[11,"Myo Myint Min Thant","4","Digital Technology","myomyatminthant.mmt@gmail.com","Bago","9875779135","House Of J&S Computer Training Center","House Of J&S Computer Training Center","19.4.2018","U Myo Min Thant","Online"],
+[12,"Hsu Watan Win Lae","5","Digital Technology","","Bago","","House Of J&S Computer Training Center","House Of J&S Computer Training Center","","","Online"],
+[13,"Pyae Bhone Paing","4","Digital Technology","jasmine.sapel1987@gmail.com","Bago","943181516","House Of J&S Computer Training Center","House Of J&S Computer Training Center","31.5.2018","U Yan Paing Tun","Online"],
+[14,"Phue Mya Mya Pyae","5","Digital Technology","","Bago","","House Of J&S Computer Training Center","House Of J&S Computer Training Center","31.8.2016","U Pyae Phyo Htet","Online"],
+[15,"La Min Phyo","5","Digital Technology","laminphyo@gmail.com","Bago","9423662601","House Of J&S Computer Training Center","House Of J&S Computer Training Center","","","Online"],
+[16,"Hsu Yadi Shan","5","Digital Technology","hsuyatishan.sophia@gmail.com","Bago","9781077457","House Of J&S Computer Training Center","House Of J&S Computer Training Center","28.2.2017","U Phyo San Thu Maung Maung","Online"],
+[17,"Htoo Htet Aung","5","Digital Technology","lucashtoohtetaung@gmail.com","Bago","9442382547","House Of J&S Computer Training Center","House Of J&S Computer Training Center","3.1.2015","U Zayar Htet","Online"],
+[18,"Aung Kaung Khant","5","Digital Technology","aungkaungkhantjason@gmail.com","Bago","9662435751","House Of J&S Computer Training Center","House Of J&S Computer Training Center","","","Online"],
+[19,"Kaung Khant Kyaw","5","Digital Technology","drkhaingyinmon@gmail.com","Bago","9428119409","House Of J&S Computer Training Center","House Of J&S Computer Training Center","6.4.2015","U Kyaw Htet Aung","Online"],
+[20,"Thiri Hnin","6","Digital Technology","linnt6084@gmail.com","Bago","9976419198","House Of J&S Computer Training Center","House Of J&S Computer Training Center","21.12.2012","U Nyi Nyi Tun","Online"],
+[21,"Thone Dari","6","Digital Technology","thonedari68@gmail.com","Bago","9768112494","House Of J&S Computer Training Center","House Of J&S Computer Training Center","17.1.2014","U Kyaw Thiha","Online"],
+[22,"Arkar Phyo","7","Digital Technology","kubonishida@gmail.com","Bago","9782526495","House Of J&S Computer Training Center","House Of J&S Computer Training Center","3.3.2013","U Win Zaw","Online"],
+[23,"Bhone Satt Han","7","Digital Technology","bhonesatthan.koko@gmail.com","Bago","9422827474","House Of J&S Computer Training Center","House Of J&S Computer Training Center","7.8.2014","U Min Thike Tun","Online"],
+[24,"Bhone Khant Nyan","7","Digital Technology","bhonekhantnyan.nyinyi@gmail.com","Bago","9422827474","House Of J&S Computer Training Center","House Of J&S Computer Training Center","7.8.2015","U Min Thike Tun","Online"],
+[25,"Kyaw Kyar Htut San","7","Digital Technology","kyawkyarhtutsan@gmail.com","Bago","9422903020","House Of J&S Computer Training Center","House Of J&S Computer Training Center","18.4.2014","U Myo Thiha","Online"],
+[26,"Htoo Zarni Maung","7","Digital Technology","dsctrding@gmail.com","Bago","9428122540","House Of J&S Computer Training Center","House Of J&S Computer Training Center","14.1.2012","Hein Zarni Bo","Online"],
+[27,"Khun Sint Thansin","7","Digital Technology","khunsintthansin291214@gmail.com","Bago","9763154352","House Of J&S Computer Training Center","House Of J&S Computer Training Center","1.6.2015","U Zayar Thin","Online"],
+[28,"Eant Htoo Thit","8","Digital Technology","eht1379@gmail.com","Bago","9775302030","House Of J&S Computer Training Center","House Of J&S Computer Training Center","22.12.2013","U Htun Htun Win","Online"],
+[29,"Min Thit Htoo","9","Digital Technology","minthithtoo71@gmail.com","Bago","9428172410","House Of J&S Computer Training Center","House Of J&S Computer Training Center","21.3.2014","","Online"],
+[30,"Arkar Nyan Linn Maung","9","Digital Technology","oh8376173@gmail.com","Bago","9762124791","House Of J&S Computer Training Center","House Of J&S Computer Training Center","27.1.2013","U Soe Nya Lin","Online"],
+[31,"Myat Thiha Maung","9","Digital Technology","alicexalexandrejim@gmail.com","Bago","9428119225","House Of J&S Computer Training Center","House Of J&S Computer Training Center","5.1.2012","U Thiha Win","Online"],
+[32,"Win Min Htun","9","Digital Technology","laminmaungjjboy@gmail.com","Bago","9263338834","House Of J&S Computer Training Center","House Of J&S Computer Training Center","14.12.2011","U Thae Maung Maung","Online"],
+[33,"Bhone Thaw Htet","9","Digital Technology","bhonethawhtet100@gmail.com","Bago","9780548267","House Of J&S Computer Training Center","House Of J&S Computer Training Center","22.2.2013","U Sein Min Naing","Online"],
+[34,"Myat Min","9","Digital Technology","myatmg174507@gmail.com","Bago","95300649","House Of J&S Computer Training Center","House Of J&S Computer Training Center","2.5.2013","U Aung Naing","Online"],
+[35,"Thadar Nway Oo Mya","KG","Digital Technology","thadarnwayoomay@gmail.com","Bago","","House Of J&S Computer Training Center","House Of J&S Computer Training Center","27.3.2020","U Zin Oo","Online"],
+[36,"Zarni Nyan Linn Maung","2","Digital Technology","zarinyanlinnmaung@gmail.com","Bago","9762124791","House Of J&S Computer Training Center","House Of J&S Computer Training Center","19.7.2016","U Soe Nya Lin","Online"]
+];
+
+function buildFromRaw(r, order){
+  return {
+    order: (order !== undefined ? order : (Number(r[0]) || 0)),
+    name: r[1] || '', grade: r[2] || '', subject: r[3] || '',
+    email: r[4] || '', address: r[5] || '',
+    phone: r[6] ? fmtPhone(r[6]) : '',
+    centre: r[7] || '', school: r[8] || '', dob: r[9] || '',
+    father: r[10] || '', place: r[11] || ''
+  };
+}
+
+/* ==========================================================
+   HELPERS
+   ========================================================== */
+function esc(s){
+  return String(s === null || s === undefined ? '' : s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+function fmtPhone(v){
+  if(v === null || v === undefined) return '';
+  let s = String(v).trim().replace(/[\s\-()]/g,'');
+  if(!s) return '';
+  s = s.replace(/^0+/,'');
+  if(s.charAt(0) === '9') s = '0' + s;
+  return s;
+}
+const GRADE_ORDER = ['KG','1','2','3','4','5','6','7','8','9','10','11','12'];
+function gradeRank(g){
+  const i = GRADE_ORDER.indexOf(String(g || '').toUpperCase().trim());
+  return i === -1 ? 999 : i;
+}
+function parseDate(s){
+  if(!s) return 0;
+  const m = String(s).trim().match(/^(\d{1,2})\s*[.\/]\s*(\d{1,2})\s*[.\/]\s*(\d{4})$/);
+  if(!m) return 0;
+  const d = parseInt(m[1],10), mo = parseInt(m[2],10), y = parseInt(m[3],10);
+  if(!d || !mo || !y) return 0;
+  return y * 10000 + mo * 100 + d;
+}
+function downloadBlob(filename, blob){
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click();
+  setTimeout(()=>{ URL.revokeObjectURL(url); a.remove(); }, 1200);
+}
+function downloadDataUrl(filename, dataUrl){
+  const a = document.createElement('a');
+  a.href = dataUrl; a.download = filename;
+  document.body.appendChild(a); a.click();
+  setTimeout(()=> a.remove(), 800);
+}
+
+/* ==========================================================
+   STATE
+   ========================================================== */
+let students = [];
+let currentRows = [];
+let sortKey = 'grade';
+let sortDir = 'asc';
+
+/* ==========================================================
+   SEED CONTROL FLAGS
+   ========================================================== */
+let seedState = 'idle';   // 'idle' | 'seeding' | 'done' | 'failed'
+let firstSnapshotHandled = false;
+
+/* ==========================================================
+   DOM
+   ========================================================== */
+const tbody       = document.getElementById('tableBody');
+const searchInput = document.getElementById('searchInput');
+const gradeFilter = document.getElementById('gradeFilter');
+const placeFilter = document.getElementById('placeFilter');
+const autoDownload= document.getElementById('autoDownload');
+const theadRow    = document.getElementById('theadRow');
+const btnSeed     = document.getElementById('btnSeed');
+
+/* ==========================================================
+   SEED FUNCTION
+   ========================================================== */
+async function doSeed(showAlert){
+  if(seedState === 'seeding') return;
+  seedState = 'seeding';
+  setFbStatus('seed', 'Seeding 36 students…');
+  console.log('[FISO] ▶ Seeding started');
+
+  tbody.innerHTML = `<tr><td colspan="13" class="loading">
+    <span class="spinner"></span>Seeding 36 students to Firestore…<br>
+    <span style="font-size:12px;font-weight:600;color:#9a8a5a;display:inline-block;margin-top:8px;">ခဏစောင့်ပါ — ၅ စက္ကန့်ခန့် ကြာနိုင်ပါတယ်</span>
+  </td></tr>`;
+
+  try{
+    /* Check existing first */
+    const existing = await getDocs(STUDENTS_COL);
+    console.log('[FISO] Existing docs:', existing.size);
+
+    if(existing.size > 0){
+      console.log('[FISO] Data exists already — skip seed');
+      seedState = 'done';
+      setFbStatus('ok', 'Firebase Connected');
+      /* Just render what's there */
+      students = existing.docs.map(d => ({ id: d.id, ...d.data() }));
+      populateGradeFilter();
+      renderTable();
+      return;
+    }
+
+    /* Write 36 docs with FIXED IDs */
+    console.log('[FISO] Writing batch…');
+    const batch = writeBatch(db);
+    RAW.forEach((r, i) => {
+      const fixedId = 'student_' + String(i + 1).padStart(3, '0');
+      const ref = doc(db, 'students', fixedId);
+      batch.set(ref, buildFromRaw(r, i + 1));
+    });
+    await batch.commit();
+    console.log('[FISO] ✅ Seed committed');
+
+    seedState = 'done';
+    setFbStatus('ok', 'Firebase Connected');
+    if(showAlert) alert('✅ Student 36 ယောက် အောင်မြင်စွာ ထည့်ပြီးပါပြီ!');
+
+  }catch(err){
+    console.error('[FISO] ❌ Seed error:', err);
+    seedState = 'failed';
+    setFbStatus('err', 'Seed failed');
+    tbody.innerHTML = `<tr><td colspan="13" class="empty" style="padding:50px 20px;line-height:2.2;">
+      <div style="font-size:50px;margin-bottom:14px;">❌</div>
+      <b style="color:#C0392B;font-size:16px;">Seed မအောင်မြင်ပါ</b><br><br>
+      <code style="color:#C0392B;background:#FFEDED;padding:6px 14px;border-radius:8px;display:inline-block;font-size:13px;">${esc(err.code || err.message)}</code><br><br>
+      <b>ဖြေရှင်းနည်း:</b><br>
+      <span style="font-size:13px;color:#6b5a20;">
+        Firebase Console → Firestore Database → Rules tab<br>
+        အောက်ပါ Code ကို Paste → <b>Publish</b> နှိပ်<br>
+        <code style="background:#FBF3D5;padding:6px 12px;border-radius:6px;display:inline-block;margin-top:8px;font-size:11.5px;text-align:left;">allow read, write: if true;</code>
+      </span><br><br>
+      <button class="btn btn-red" onclick="location.reload()" style="font-size:14px;padding:12px 24px;">🔄 Retry</button>
+    </td></tr>`;
+  }
+}
+
+/* Manual seed button */
+btnSeed.addEventListener('click', () => doSeed(true));
+
+/* ==========================================================
+   FIRESTORE LISTENER — SAFE VERSION
+   ========================================================== */
+console.log('[FISO] Starting Firestore listener…');
+
+onSnapshot(STUDENTS_COL,
+  async (snap) => {
+    console.log('[FISO] 📡 Snapshot: ' + snap.size + ' docs, empty: ' + snap.empty);
+
+    /* ---- FIRST SNAPSHOT ONLY ---- */
+    if(!firstSnapshotHandled){
+      firstSnapshotHandled = true;
+
+      if(snap.empty){
+        /* Empty on first load → auto seed (only once) */
+        console.log('[FISO] Empty on first load → auto-seeding');
+        await doSeed(false);
+        return;  /* Next snapshot will have 36 docs */
+      }
+      /* Has data on first load → just render below */
+    }
+
+    /* ---- SUBSEQUENT SNAPSHOTS ---- */
+    if(snap.empty){
+      /* Empty (maybe seed in progress or user deleted all) */
+      if(seedState === 'seeding'){
+        console.log('[FISO] Seed in progress, waiting…');
+        return;  /* Don't render yet */
+      }
+
+      if(seedState === 'failed'){
+        /* Already showed error above */
+        return;
+      }
+
+      /* Genuinely empty */
+      console.log('[FISO] Collection empty');
+      students = [];
+      setFbStatus('ok', 'Firebase Connected');
+      tbody.innerHTML = `<tr><td colspan="13" class="empty" style="padding:50px 20px;line-height:2.2;">
+        <div style="font-size:50px;margin-bottom:14px;">📭</div>
+        <b style="font-size:17px;color:#8C6D1F;">Firestore ထဲမှာ ကျောင်းသား ဒေတာ မရှိပါ။</b><br><br>
+        Sample data 36 ယောက် ထည့်ဖို့ အောက်ပါ ခလုတ်ကို နှိပ်ပါ:<br><br>
+        <button class="btn btn-red" id="btnSeedInline" style="font-size:15px;padding:14px 28px;">🌱 Seed 36 Students Now</button>
+      </td></tr>`;
+      const b = document.getElementById('btnSeedInline');
+      if(b) b.addEventListener('click', () => doSeed(true));
+      updateStats();
+      return;
+    }
+
+    /* ---- HAS DATA → RENDER ---- */
+    console.log('[FISO] ✅ Rendering ' + snap.size + ' students');
+    seedState = 'done';
+    students = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    setFbStatus('ok', 'Firebase Connected');
+    populateGradeFilter();
+    renderTable();
+  },
+  (err) => {
+    console.error('[FISO] ❌ Listener error:', err);
+    setFbStatus('err', 'Connection error');
+    tbody.innerHTML = `<tr><td colspan="13" class="empty" style="padding:50px 20px;line-height:2.2;">
+      <div style="font-size:50px;margin-bottom:14px;">⚠️</div>
+      <b style="color:#C0392B;font-size:16px;">Firebase ချိတ်ဆက်မှု မအောင်မြင်ပါ</b><br><br>
+      <code style="color:#C0392B;background:#FFEDED;padding:6px 14px;border-radius:8px;display:inline-block;">${esc(err.code || err.message)}</code>
+    </td></tr>`;
+  }
+);
+
+/* ==========================================================
+   SORT
+   ========================================================== */
+function updateSortIndicators(){
+  theadRow.querySelectorAll('th.sortable').forEach(th => {
+    const k = th.dataset.sort;
+    const arrow = th.querySelector('.arrow');
+    th.classList.toggle('active', k === sortKey);
+    arrow.textContent = (k === sortKey) ? (sortDir === 'asc' ? '▲' : '▼') : '▲▼';
+  });
+}
+theadRow.addEventListener('click', e => {
+  const th = e.target.closest('th.sortable');
+  if(!th) return;
+  const k = th.dataset.sort;
+  if(sortKey === k) sortDir = sortDir === 'asc' ? 'desc' : 'asc';
+  else { sortKey = k; sortDir = 'asc'; }
+  updateSortIndicators();
+  renderTable();
+});
+
+/* ==========================================================
+   FILTERS
+   ========================================================== */
+function populateGradeFilter(){
+  const grades = [...new Set(students.map(s => String(s.grade||'').trim()).filter(Boolean))]
+                 .sort((a,b) => gradeRank(a) - gradeRank(b));
+  const cur = gradeFilter.value;
+  gradeFilter.innerHTML = '<option value="">All Grades</option>' +
+    grades.map(g => `<option value="${esc(g)}">${esc(g)}</option>`).join('');
+  if(grades.includes(cur)) gradeFilter.value = cur;
+}
+function getFiltered(){
+  const q = searchInput.value.trim().toLowerCase();
+  const g = gradeFilter.value;
+  const p = placeFilter.value;
+  return students.filter(s => {
+    if(g && String(s.grade).trim() !== g) return false;
+    if(p && String(s.place).trim() !== p) return false;
+    if(!q) return true;
+    return [s.name, s.email, s.phone, s.father, s.school, s.address, s.grade, s.centre]
+      .some(v => String(v || '').toLowerCase().includes(q));
+  });
+}
+function compareStudents(a, b){
+  let va, vb;
+  switch(sortKey){
+    case 'id':    va = Number(a.order) || 0; vb = Number(b.order) || 0; break;
+    case 'grade': va = gradeRank(a.grade); vb = gradeRank(b.grade); break;
+    case 'dob':   va = parseDate(a.dob); vb = parseDate(b.dob); break;
+    case 'phone':
+      va = fmtPhone(a.phone); vb = fmtPhone(b.phone);
+      return String(va).localeCompare(String(vb), undefined, {numeric:true, sensitivity:'base'})
+             * (sortDir === 'asc' ? 1 : -1);
+    default:
+      va = String(a[sortKey] || '').toLowerCase();
+      vb = String(b[sortKey] || '').toLowerCase();
+  }
+  if(va < vb) return sortDir === 'asc' ? -1 : 1;
+  if(va > vb) return sortDir === 'asc' ? 1 : -1;
+  return (Number(a.order)||0) - (Number(b.order)||0);
+}
+
+/* ==========================================================
+   RENDER TABLE
+   ========================================================== */
+function renderTable(){
+  const filtered = getFiltered();
+  currentRows = filtered.slice().sort(compareStudents);
+
+  if(currentRows.length === 0){
+    tbody.innerHTML = `<tr><td colspan="13" class="empty">😔 No student records found.</td></tr>`;
+  } else {
+    tbody.innerHTML = currentRows.map((s, i) => {
+      const ph = fmtPhone(s.phone);
+      const placeCls = String(s.place).toLowerCase() === 'offline' ? 'place-offline' : 'place-online';
+      return `
+      <tr>
+        <td class="no-cell">${i + 1}</td>
+        <td class="name-cell">${esc(s.name)}</td>
+        <td><span class="grade-pill">${esc(s.grade) || '—'}</span></td>
+        <td>${esc(s.subject) || '—'}</td>
+        <td class="email-cell">${esc(s.email) || '<span style="color:#c9b98a">—</span>'}</td>
+        <td>${esc(s.address) || '—'}</td>
+        <td class="phone-cell">${ph ? esc(ph) : '<span style="color:#c9b98a">—</span>'}</td>
+        <td>${esc(s.centre) || '—'}</td>
+        <td>${esc(s.school) || '—'}</td>
+        <td>${esc(s.dob) || '—'}</td>
+        <td>${esc(s.father) || '—'}</td>
+        <td><span class="place-pill ${placeCls}">${esc(s.place) || '—'}</span></td>
+        <td class="actions">
+          <button class="act img"  data-act="img"  data-id="${s.id}" title="Export as Image">🖼️</button>
+          <button class="act edit" data-act="edit" data-id="${s.id}" title="Edit">✏️</button>
+          <button class="act del"  data-act="del"  data-id="${s.id}" title="Delete">🗑️</button>
+        </td>
+      </tr>`;
+    }).join('');
+  }
+  updateStats();
+}
+
+function updateStats(){
+  document.getElementById('statTotal').textContent   = students.length;
+  document.getElementById('statShown').textContent   = currentRows.length;
+  document.getElementById('statOnline').textContent  = students.filter(s => String(s.place).toLowerCase()==='online').length;
+  document.getElementById('statOffline').textContent = students.filter(s => String(s.place).toLowerCase()==='offline').length;
+}
+
+/* ==========================================================
+   TABLE ACTIONS
+   ========================================================== */
+tbody.addEventListener('click', e => {
+  const btn = e.target.closest('button[data-act]');
+  if(!btn) return;
+  const id = btn.dataset.id;
+  const act = btn.dataset.act;
+  if(act === 'edit') openEditModal(id);
+  if(act === 'del')  deleteStudent(id);
+  if(act === 'img')  exportStudentImage(id);
+});
+
+/* ==========================================================
+   EDIT / ADD MODAL
+   ========================================================== */
+const editOverlay = document.getElementById('editOverlay');
+const formGrid    = document.getElementById('formGrid');
+const editTitle   = document.getElementById('editTitle');
+const btnSave     = document.getElementById('btnSave');
+let editingId = null;
+
+const FORM_FIELDS = [
+  { key:'name',    label:'Full Name (In English)',  type:'text' },
+  { key:'grade',   label:'Current Grade',           type:'text' },
+  { key:'subject', label:'Subjects',                type:'text' },
+  { key:'email',   label:'Email Address',           type:'text' },
+  { key:'address', label:'Address (To send award)', type:'text' },
+  { key:'phone',   label:'Contact Number',          type:'text' },
+  { key:'centre',  label:'Exam Centre',             type:'text' },
+  { key:'school',  label:'School Name',             type:'text' },
+  { key:'dob',     label:'Date of Birthday (DD/MM/YY)', type:'text' },
+  { key:'father',  label:"Father's Name",           type:'text' },
+  { key:'place',   label:'Exam Place',              type:'select', options:['Online','Offline'] }
+];
+function buildForm(data){
+  formGrid.innerHTML = FORM_FIELDS.map(f => {
+    const val = data ? (data[f.key] || '') : '';
+    if(f.type === 'select'){
+      return `<div class="field">
+        <label>${esc(f.label)}</label>
+        <select data-key="${f.key}">
+          ${f.options.map(o => `<option value="${o}" ${String(val)===o?'selected':''}>${o}</option>`).join('')}
+        </select>
+      </div>`;
+    }
+    return `<div class="field">
+      <label>${esc(f.label)}</label>
+      <input type="text" data-key="${f.key}" value="${esc(val)}">
+    </div>`;
+  }).join('');
+}
+function openEditModal(id){
+  editingId = id;
+  const s = students.find(x => x.id === id);
+  if(!s) return;
+  editTitle.textContent = '✏️ Edit Student — ' + s.name;
+  buildForm(s);
+  editOverlay.classList.add('show');
+}
+function openAddModal(){
+  editingId = null;
+  editTitle.textContent = '➕ Add New Student';
+  buildForm(null);
+  editOverlay.classList.add('show');
+}
+document.getElementById('btnAdd').addEventListener('click', openAddModal);
+
+btnSave.addEventListener('click', async () => {
+  const data = {};
+  formGrid.querySelectorAll('[data-key]').forEach(el => {
+    data[el.dataset.key] = el.value.trim();
+  });
+  if(!data.name){ alert('⚠️ Full Name is required!'); return; }
+  data.phone = fmtPhone(data.phone);
+
+  btnSave.disabled = true;
+  const oldTxt = btnSave.textContent;
+  btnSave.textContent = '⏳ Saving…';
+
+  try{
+    if(editingId === null){
+      const newOrder = students.length
+        ? Math.max(...students.map(s => Number(s.order) || 0)) + 1
+        : 1;
+      await addDoc(STUDENTS_COL, { ...data, order: newOrder });
+    }else{
+      await updateDoc(doc(db, 'students', editingId), data);
+    }
+    editOverlay.classList.remove('show');
+  }catch(err){
+    console.error('Save error:', err);
+    alert('⚠️ Save မအောင်မြင်ပါ။\n' + (err.message || err.code || ''));
+  }finally{
+    btnSave.disabled = false;
+    btnSave.textContent = oldTxt;
+  }
+});
+
+/* ==========================================================
+   DELETE
+   ========================================================== */
+async function deleteStudent(id){
+  const s = students.find(x => x.id === id);
+  if(!s) return;
+  if(!confirm(`🗑️ Delete "${s.name}" ?\n\nဒီကျောင်းသားရဲ့ အချက်အလက်ကို ဖျက်မှာ သေချာပါသလား?`)) return;
+  try{
+    await deleteDoc(doc(db, 'students', id));
+  }catch(err){
+    console.error('Delete error:', err);
+    alert('⚠️ Delete မအောင်မြင်ပါ။\n' + (err.message || err.code || ''));
+  }
+}
+
+/* ==========================================================
+   EXPORT SINGLE STUDENT AS IMAGE
+   ========================================================== */
+const imgOverlay   = document.getElementById('imgOverlay');
+const previewImg   = document.getElementById('previewImg');
+const imgTitle     = document.getElementById('imgTitle');
+let   lastImageData = null;
+let   lastImageName = 'student.png';
+
+function cardRow(label, value){
+  return `<div class="ec-row">
+    <div class="ec-label">${esc(label)}</div>
+    <div class="ec-value">${esc(value) || '—'}</div>
+  </div>`;
+}
+function buildExportCard(s, index){
+  const card = document.createElement('div');
+  card.className = 'export-card';
+  card.innerHTML = `
+    <div class="ec-top">
+      <img src="logo1.png" alt="logo" onerror="this.style.display='none'">
+      <div class="ec-brand">
+        <h1>House Of J&amp;S</h1>
+        <p>Computer Training Center</p>
+      </div>
+    </div>
+    <div class="ec-body">
+      ${cardRow('No', index)}
+      ${cardRow('Full Name', s.name)}
+      ${cardRow('Current Grade', s.grade)}
+      ${cardRow('Subjects', s.subject)}
+      ${cardRow('Email Address', s.email)}
+      ${cardRow('Address', s.address)}
+      ${cardRow('Contact Number', fmtPhone(s.phone))}
+      ${cardRow('Exam Centre', s.centre)}
+      ${cardRow('School Name', s.school)}
+      ${cardRow('Date of Birthday', s.dob)}
+      ${cardRow("Father's Name", s.father)}
+      ${cardRow('Exam Place', s.place)}
+    </div>
+    <div class="ec-foot">
+      <span>FISO National Round 2026</span>
+      <span>Student Record</span>
+    </div>
+  `;
+  return card;
+}
+async function exportStudentImage(id){
+  const s = students.find(x => x.id === id);
+  if(!s) return;
+  if(typeof html2canvas === 'undefined'){
+    alert('⚠️ html2canvas library မတင်ရသေးပါ။ Internet connection စစ်ပေးပါ။');
+    return;
+  }
+  let index = currentRows.findIndex(r => r.id === s.id);
+  if(index === -1) index = students.findIndex(r => r.id === s.id);
+  index = index + 1;
+
+  const card = buildExportCard(s, index);
+  document.body.appendChild(card);
+  try{
+    const imgs = [...card.querySelectorAll('img')];
+    await Promise.all(imgs.map(img => img.complete
+      ? Promise.resolve()
+      : new Promise(res => { img.onload = img.onerror = res; })
+    ));
+    const canvas = await html2canvas(card, {
+      scale: 2, backgroundColor: '#ffffff', useCORS: true, logging: false
+    });
+    const dataUrl = canvas.toDataURL('image/png');
+    /* ✅ ဖိုင်နာမည်ကို ကျောင်းသားနာမည်ဖြင့်သာ သတ်မှတ် */
+    const safeName = String(s.name).replace(/[^\w\u1000-\u109F]+/g,'_').replace(/^_|_$/g,'') || 'student';
+    const fileName = `${safeName}.png`;
+    lastImageData = dataUrl;
+    lastImageName = fileName;
+    imgTitle.textContent = '🖼️ ' + s.name;
+    previewImg.src = dataUrl;
+    imgOverlay.classList.add('show');
+    if(autoDownload.checked) downloadDataUrl(fileName, dataUrl);
+  }catch(err){
+    console.error(err);
+    alert('⚠️ Image ထုတ်ယူရာတွင် အမှားဖြစ်ပေါ်ပါသည်။');
+  }finally{
+    card.remove();
+  }
+}
+document.getElementById('btnDownloadImg').addEventListener('click', () => {
+  if(lastImageData) downloadDataUrl(lastImageName, lastImageData);
+});
+
+/* ==========================================================
+   EXPORT CSV
+   ========================================================== */
+const CSV_HEADERS = [
+  'No','Full Name (In English)','Current Grade','Subjects',
+  'Email address','Address (To send award)','Contact Number',
+  'Exam Centre','School Name','Date of Birthday (DD/MM/YY)',
+  "Father's Name",'Exam Place'
+];
+function csvCell(v){
+  const s = String(v === null || v === undefined ? '' : v);
+  if(/[",\r\n]/.test(s)) return '"' + s.replace(/"/g,'""') + '"';
+  return s;
+}
+function exportCSV(){
+  const source = currentRows.length ? currentRows : students;
+  const rows = source.map((s, i) => [
+    i + 1, s.name || '', s.grade || '', s.subject || '', s.email || '',
+    s.address || '', fmtPhone(s.phone), s.centre || '', s.school || '',
+    s.dob || '', s.father || '', s.place || ''
+  ]);
+  const lines = [CSV_HEADERS.map(csvCell).join(',')];
+  rows.forEach(r => lines.push(r.map(csvCell).join(',')));
+  const csv = '\uFEFF' + lines.join('\r\n');
+  const blob = new Blob([csv], { type:'text/csv;charset=utf-8;' });
+  const d = new Date();
+  const stamp = `${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}`;
+  downloadBlob(`HOJS_FISO2026_Students_${stamp}.csv`, blob);
+}
+document.getElementById('btnExportCSV').addEventListener('click', exportCSV);
+
+/* ==========================================================
+   MODAL CLOSE
+   ========================================================== */
+document.querySelectorAll('[data-close]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.getElementById(btn.dataset.close).classList.remove('show');
+  });
+});
+document.querySelectorAll('.overlay').forEach(ov => {
+  ov.addEventListener('click', e => {
+    if(e.target === ov) ov.classList.remove('show');
+  });
+});
+document.addEventListener('keydown', e => {
+  if(e.key === 'Escape'){
+    document.querySelectorAll('.overlay.show').forEach(o => o.classList.remove('show'));
+  }
+});
+
+/* ==========================================================
+   FILTER EVENTS
+   ========================================================== */
+searchInput.addEventListener('input', renderTable);
+gradeFilter.addEventListener('change', renderTable);
+placeFilter.addEventListener('change', renderTable);
+
+/* ==========================================================
+   INIT
+   ========================================================== */
+updateSortIndicators();
+setFbStatus('', 'Connecting…');
+</script>
+</body>
+</html>
